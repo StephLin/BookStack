@@ -188,6 +188,9 @@
   &.fill-width {
     width: 100%;
   }
+  &.hackmd {
+    padding: 0;
+  }
 }
 @include smaller-than($xxl) {
   .content-wrap.card {

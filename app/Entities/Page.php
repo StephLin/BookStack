@@ -21,7 +21,7 @@ use Permissions;
  */
 class Page extends BookChild
 {
-    protected $fillable = ['name', 'html', 'priority', 'markdown'];
+    protected $fillable = ['name', 'html', 'priority', 'markdown', 'hackmd', 'hackmd_host', 'hackmd_id'];
 
     protected $simpleAttributes = ['name', 'id', 'slug'];
 
@@ -117,5 +117,17 @@ class Page extends BookChild
     public function getCurrentRevision()
     {
         return $this->revisions()->first();
+    }
+
+    /**
+     * Get hackmd url for the page if it is hackmd
+     * @return string
+     */
+    public function getHackmdUrl()
+    {
+        if ($this->hackmd) {
+            return HackMD::getNoteUrl($this->hackmd_host, $this->hackmd_id);
+        }
+        return '';
     }
 }

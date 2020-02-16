@@ -20,7 +20,7 @@ return [
     'role' => 'Role',
     'cover_image' => 'Cover image',
     'cover_image_description' => 'This image should be approx 440x250px.',
-    
+
     // Actions
     'actions' => 'Actions',
     'view' => 'View',
@@ -39,6 +39,7 @@ return [
     'remove' => 'Remove',
     'add' => 'Add',
     'fullscreen' => 'Fullscreen',
+    'edit_link' => 'Edit Link',
 
     // Sort Options
     'sort_options' => 'Sort Options',

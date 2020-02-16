@@ -10,12 +10,18 @@
         ]])
     </div>
 
+    @if ($page->hackmd)
+    <main class="content-wrap card hackmd">
+        <iframe class="hackmd-page-content" src="{{ $page->getHackmdUrl() }}" frameborder="0"></iframe>
+    </main>
+    @else
     <main class="content-wrap card">
         <div class="page-content" page-display="{{ $page->id }}">
             @include('pages.pointer', ['page' => $page])
             @include('pages.page-display')
         </div>
     </main>
+    @endif
 
     @if ($commentsEnabled)
         <div class="container small p-none comments-container mb-l print-hidden">
@@ -119,10 +125,21 @@
 
             {{--User Actions--}}
             @if(userCan('page-update', $page))
+                @if($page->hackmd)
+                <a href="{{ $page->getUrl('/edit-hackmd') }}" class="icon-list-item">
+                    <span>@icon('edit')</span>
+                    <span>{{ trans('common.edit_link') }}</span>
+                </a>
+                <a href="{{ $page->getUrl('/edit') }}" class="icon-list-item" target="_blank">
+                    <span>@icon('file')</span>
+                    <span>{{ trans('common.edit') }}</span>
+                </a>
+                @else
                 <a href="{{ $page->getUrl('/edit') }}" class="icon-list-item">
                     <span>@icon('edit')</span>
                     <span>{{ trans('common.edit') }}</span>
                 </a>
+                @endif
             @endif
             @if(userCanOnAny('page-create'))
                 <a href="{{ $page->getUrl('/copy') }}" class="icon-list-item">
@@ -137,10 +154,12 @@
 	                    <span>{{ trans('common.move') }}</span>
 	                </a>
                 @endif
+                @if(!$page->hackmd)
                 <a href="{{ $page->getUrl('/revisions') }}" class="icon-list-item">
                     <span>@icon('history')</span>
                     <span>{{ trans('entities.revisions') }}</span>
                 </a>
+                @endif
             @endif
             @if(userCan('restrictions-manage', $page))
                 <a href="{{ $page->getUrl('/permissions') }}" class="icon-list-item">

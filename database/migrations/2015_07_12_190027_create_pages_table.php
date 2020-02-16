@@ -23,6 +23,9 @@ class CreatePagesTable extends Migration
             $table->longText('html');
             $table->longText('text');
             $table->integer('priority');
+            $table->boolean('hackmd')->default(false);
+            $table->string('hackmd_host')->nullable();
+            $table->string('hackmd_id')->nullable();
             $table->nullableTimestamps();
         });
     }

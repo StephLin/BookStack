@@ -51,6 +51,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Pages
         Route::get('/{bookSlug}/create-page', 'PageController@create');
+        Route::get('/{bookSlug}/create-hackmd-page', 'PageController@createHackmdPage');
+        Route::post('/{bookSlug}/create-hackmd-page', 'PageController@storeHackmdPage');
         Route::post('/{bookSlug}/create-guest-page', 'PageController@createAsGuest');
         Route::get('/{bookSlug}/draft/{pageId}', 'PageController@editDraft');
         Route::post('/{bookSlug}/draft/{pageId}', 'PageController@store');
@@ -59,6 +61,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{bookSlug}/page/{pageSlug}/export/html', 'PageExportController@html');
         Route::get('/{bookSlug}/page/{pageSlug}/export/plaintext', 'PageExportController@plainText');
         Route::get('/{bookSlug}/page/{pageSlug}/edit', 'PageController@edit');
+        Route::get('/{bookSlug}/page/{pageSlug}/edit-hackmd', 'PageController@editHackmdPage');
+        Route::put('/{bookSlug}/page/{pageSlug}/edit-hackmd', 'PageController@updateHackmdPage');
         Route::get('/{bookSlug}/page/{pageSlug}/move', 'PageController@showMove');
         Route::put('/{bookSlug}/page/{pageSlug}/move', 'PageController@move');
         Route::get('/{bookSlug}/page/{pageSlug}/copy', 'PageController@showCopy');
@@ -80,6 +84,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Chapters
         Route::get('/{bookSlug}/chapter/{chapterSlug}/create-page', 'PageController@create');
+        Route::get('/{bookSlug}/chapter/{chapterSlug}/create-hackmd-page', 'PageController@createHackmdPage');
+        Route::post('/{bookSlug}/chapter/{chapterSlug}/create-hackmd-page', 'PageController@storeHackmdPage');
         Route::post('/{bookSlug}/chapter/{chapterSlug}/create-guest-page', 'PageController@createAsGuest');
         Route::get('/{bookSlug}/create-chapter', 'ChapterController@create');
         Route::post('/{bookSlug}/create-chapter', 'ChapterController@store');

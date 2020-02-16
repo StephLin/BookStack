@@ -6,6 +6,7 @@ use BookStack\Entities\Managers\PageContent;
 use BookStack\Entities\Managers\PageEditActivity;
 use BookStack\Entities\Page;
 use BookStack\Entities\Repos\PageRepo;
+use BookStack\Entities\HackMD;
 use BookStack\Exceptions\NotFoundException;
 use BookStack\Exceptions\NotifyException;
 use BookStack\Exceptions\PermissionsException;
@@ -47,6 +48,20 @@ class PageController extends Controller
         // Otherwise show the edit view if they're a guest
         $this->setPageTitle(trans('entities.pages_new'));
         return view('pages.guest-create', ['parent' => $parent]);
+    }
+
+    /**
+     * Show the form for creating a new page from HackMD.
+     * @throws Throwable
+     */
+    public function createHackmdPage(string $bookSlug, string $chapterSlug = null)
+    {
+        $parent = $this->pageRepo->getParentFromSlugs($bookSlug, $chapterSlug);
+        $this->checkOwnablePermission('page-create', $parent);
+
+        // Otherwise show the edit view if they're a guest
+        $this->setPageTitle(trans('entities.pages_new'));
+        return view('pages.hackmd-create', ['parent' => $parent]);
     }
 
     /**
@@ -112,6 +127,42 @@ class PageController extends Controller
         return redirect($page->getUrl());
     }
 
+
+    /**
+     * Store a new page by employing HackMD note into a page.
+     * @throws NotFoundException
+     * @throws ValidationException
+     */
+    public function storeHackmdPage(Request $request, string $bookSlug, string $chapterSlug = null)
+    {
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'hackmdHost' => 'required|url',
+            'hackmdId' => 'required|string|max:255'
+        ]);
+
+        $hackmdHost = $request->get('hackmdHost');
+        $hackmdId = $request->get('hackmdId');
+
+        $parent = $this->pageRepo->getParentFromSlugs($bookSlug, $chapterSlug);
+        $this->checkOwnablePermission('page-create', $parent);
+
+        $page = $this->pageRepo->getNewDraftPage($parent);
+
+        $page->hackmd = 1;
+        $page->hackmd_host = $hackmdHost;
+        $page->hackmd_id = $hackmdId;
+
+        $this->pageRepo->publishDraft($page, [
+            'name' => $request->get('name'),
+            'html' => '',
+        ]);
+
+        Activity::add($page, 'page_create', $parent->id);
+
+        return redirect($page->getUrl());
+    }
+
     /**
      * Display the specified page.
      * If the page is not found via the slug the revisions are searched for a match.
@@ -132,6 +183,12 @@ class PageController extends Controller
         }
 
         $this->checkOwnablePermission('page-view', $page);
+
+        if ($page->hackmd) {
+            $hackmdNote = HackMD::getHackmdNote($page->hackmd_host, $page->hackmd_id);
+            $page->text = $hackmdNote['text'];
+            $page->save();
+        }
 
         $pageContent = (new PageContent($page));
         $page->html = $pageContent->render();
@@ -175,6 +232,10 @@ class PageController extends Controller
         $page = $this->pageRepo->getBySlug($bookSlug, $pageSlug);
         $this->checkOwnablePermission('page-update', $page);
 
+        if ($page->hackmd) {
+            return redirect($page->getHackmdUrl() . '/edit');
+        }
+
         $page->isDraft = false;
         $editActivity = new PageEditActivity($page);
 
@@ -209,6 +270,22 @@ class PageController extends Controller
     }
 
     /**
+     * Show the form for editing the specified HackMD page.
+     */
+    public function editHackmdPage(string $bookSlug, string $pageSlug)
+    {
+        $page = $this->pageRepo->getBySlug($bookSlug, $pageSlug);
+        $this->checkOwnablePermission('page-update', $page);
+
+        if (!$page->hackmd) {
+            return redirect($page->getUrl('/edit'));
+        }
+
+        $this->setPageTitle(trans('entities.pages_editing_named', ['pageName'=>$page->name]));
+        return view('pages.hackmd-edit', ['parent' => $page]);
+    }
+
+    /**
      * Update the specified page in storage.
      * @throws ValidationException
      * @throws NotFoundException
@@ -222,6 +299,41 @@ class PageController extends Controller
         $this->checkOwnablePermission('page-update', $page);
 
         $this->pageRepo->update($page, $request->all());
+        Activity::add($page, 'page_update', $page->book->id);
+
+        return redirect($page->getUrl());
+    }
+
+    /**
+     * Update the specified page in storage.
+     * @throws ValidationException
+     * @throws NotFoundException
+     */
+    public function updateHackmdPage(Request $request, string $bookSlug, string $pageSlug)
+    {
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'hackmdHost' => 'required|url',
+            'hackmdId' => 'required|string|max:255'
+        ]);
+
+        $hackmdHost = $request->get('hackmdHost');
+        $hackmdId = $request->get('hackmdId');
+
+        $hackmdNote = HackMD::getHackmdNote($hackmdHost, $hackmdId);
+
+        $page = $this->pageRepo->getBySlug($bookSlug, $pageSlug);
+
+        $page->hackmd_host = $hackmdHost;
+        $page->hackmd_id = $hackmdId;
+        $page->text = $hackmdNote['text'];
+
+        $this->checkOwnablePermission('page-update', $page);
+
+        $this->pageRepo->update($page, [
+            'name' => $request->get('name'),
+            'html' => $hackmdNote['text'],
+        ]);
         Activity::add($page, 'page_update', $page->book->id);
 
         return redirect($page->getUrl());

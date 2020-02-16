@@ -121,6 +121,7 @@ return [
     'books_permissions_updated' => 'Book Permissions Updated',
     'books_empty_contents' => 'No pages or chapters have been created for this book.',
     'books_empty_create_page' => 'Create a new page',
+    'books_empty_create_hackmd_page' => 'Create a new page from HackMD',
     'books_empty_sort_current_book' => 'Sort the current book',
     'books_empty_add_chapter' => 'Add a chapter',
     'books_permissions_active' => 'Book Permissions Active',
@@ -235,6 +236,9 @@ return [
     'pages_draft_discarded' => 'Draft discarded, The editor has been updated with the current page content',
     'pages_specific' => 'Specific Page',
     'pages_is_template' => 'Page Template',
+    'pages_hackmd_new' => 'New Page from HackMD',
+    'pages_hackmd_host' => 'Host of HackMD',
+    'pages_hackmd_id' => 'ID of HackMD Note',
 
     // Editor Sidebar
     'page_tags' => 'Page Tags',

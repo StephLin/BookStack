@@ -39,6 +39,10 @@
                                 <span class="icon">@icon('page')</span>
                                 <span>{{ trans('entities.books_empty_create_page') }}</span>
                             </a>
+                            <a href="{{ $book->getUrl('/create-hackmd-page') }}" class="icon-list-item text-page">
+                                <span class="icon">@icon('page')</span>
+                                <span>{{ trans('entities.books_empty_create_hackmd_page') }}</span>
+                            </a>
                         @endif
                         @if(userCan('chapter-create', $book))
                             <a href="{{ $book->getUrl('/create-chapter') }}" class="icon-list-item text-chapter">
@@ -85,6 +89,10 @@
                 <a href="{{ $book->getUrl('/create-page') }}" class="icon-list-item">
                     <span>@icon('add')</span>
                     <span>{{ trans('entities.pages_new') }}</span>
+                </a>
+                <a href="{{ $book->getUrl('/create-hackmd-page') }}" class="icon-list-item">
+                    <span>@icon('add')</span>
+                    <span>{{ trans('entities.pages_hackmd_new') }}</span>
                 </a>
             @endif
             @if(userCan('chapter-create', $book))
@@ -144,4 +152,3 @@
         </div>
     @endif
 @stop
-

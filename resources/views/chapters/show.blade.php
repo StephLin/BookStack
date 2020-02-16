@@ -36,6 +36,10 @@
                                 <span class="icon">@icon('page')</span>
                                 <span>{{ trans('entities.books_empty_create_page') }}</span>
                             </a>
+                            <a href="{{ $book->getUrl('/create-hackmd-page') }}" class="icon-list-item text-page">
+                                <span class="icon">@icon('page')</span>
+                                <span>{{ trans('entities.books_empty_create_hackmd_page') }}</span>
+                            </a>
                         @endif
                         @if(userCan('book-update', $book))
                             <a href="{{ $book->getUrl('/sort') }}" class="icon-list-item text-book">
@@ -92,6 +96,10 @@
                     <span>@icon('add')</span>
                     <span>{{ trans('entities.pages_new') }}</span>
                 </a>
+                <a href="{{ $chapter->getUrl('/create-hackmd-page') }}" class="icon-list-item">
+                    <span>@icon('add')</span>
+                    <span>{{ trans('entities.pages_hackmd_new') }}</span>
+                </a>
             @endif
 
             <hr class="primary-background"/>
@@ -140,5 +148,3 @@
 
     @include('partials.book-tree', ['book' => $book, 'sidebarTree' => $sidebarTree])
 @stop
-
-
