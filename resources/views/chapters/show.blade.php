@@ -36,7 +36,7 @@
                                 <span class="icon">@icon('page')</span>
                                 <span>{{ trans('entities.books_empty_create_page') }}</span>
                             </a>
-                            <a href="{{ $book->getUrl('/create-hackmd-page') }}" class="icon-list-item text-page">
+                            <a href="{{ $chapter->getUrl('/create-hackmd-page') }}" class="icon-list-item text-page">
                                 <span class="icon">@icon('page')</span>
                                 <span>{{ trans('entities.books_empty_create_hackmd_page') }}</span>
                             </a>
