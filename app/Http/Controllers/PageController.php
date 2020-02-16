@@ -143,6 +143,7 @@ class PageController extends Controller
 
         $hackmdHost = $request->get('hackmdHost');
         $hackmdId = $request->get('hackmdId');
+        $hackmdNote = HackMD::getHackmdNote($hackmdHost, $hackmdId);
 
         $parent = $this->pageRepo->getParentFromSlugs($bookSlug, $chapterSlug);
         $this->checkOwnablePermission('page-create', $parent);
@@ -155,7 +156,7 @@ class PageController extends Controller
 
         $this->pageRepo->publishDraft($page, [
             'name' => $request->get('name'),
-            'html' => '',
+            'html' => $hackmdNote['text'],
         ]);
 
         Activity::add($page, 'page_create', $parent->id);
