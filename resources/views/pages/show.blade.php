@@ -12,7 +12,10 @@
 
     @if ($page->hackmd)
     <main class="content-wrap card hackmd">
-        <iframe class="hackmd-page-content" src="{{ $page->getHackmdUrl() }}" frameborder="0"></iframe>
+        <div class="hackmd-page-content">
+            <a href="#doc"></a>
+            <iframe id="doc" src="{{ $page->getHackmdUrl() }}" frameborder="0"></iframe>
+        </div>
     </main>
     @else
     <main class="content-wrap card">
