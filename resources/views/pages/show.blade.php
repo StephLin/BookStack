@@ -180,7 +180,14 @@
             <hr class="primary-background"/>
 
             {{--Export--}}
-            @include('partials.entity-export-menu', ['entity' => $page])
+            @if($page->hackmd)
+                <a href="{{ $page->getHackmdUrl() }}" class="icon-list-item" target="_blank">
+                    <span>@icon('export')</span>
+                    <span>{{ trans('common.view_published_hackmd') }}</span>
+                </a>
+            @else
+                @include('partials.entity-export-menu', ['entity' => $page])
+            @endif
         </div>
 
     </div>
