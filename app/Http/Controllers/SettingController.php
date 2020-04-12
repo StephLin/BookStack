@@ -44,7 +44,7 @@ class SettingController extends Controller
         $this->preventAccessInDemoMode();
         $this->checkPermission('settings-manage');
         $this->validate($request, [
-            'app_logo' => $this->imageRepo->getImageValidationRules(),
+            'app_logo' => 'nullable|' . $this->getImageValidationRules(),
         ]);
 
         // Cycles through posted settings and update them
@@ -57,7 +57,7 @@ class SettingController extends Controller
         }
 
         // Update logo image if set
-        if ($request->has('app_logo')) {
+        if ($request->hasFile('app_logo')) {
             $logoFile = $request->file('app_logo');
             $this->imageRepo->destroyByType('system');
             $image = $this->imageRepo->saveNew($logoFile, 'system', 0, null, 86);
@@ -122,8 +122,14 @@ class SettingController extends Controller
     {
         $this->checkPermission('settings-manage');
 
-        user()->notify(new TestEmail());
-        $this->showSuccessNotification(trans('settings.maint_send_test_email_success', ['address' => user()->email]));
+        try {
+            user()->notify(new TestEmail());
+            $this->showSuccessNotification(trans('settings.maint_send_test_email_success', ['address' => user()->email]));
+        } catch (\Exception $exception) {
+            $errorMessage = trans('errors.maintenance_test_email_failure') . "\n" . $exception->getMessage();
+            $this->showErrorNotification($errorMessage);
+        }
+
 
         return redirect('/settings/maintenance#image-cleanup')->withInput();
     }

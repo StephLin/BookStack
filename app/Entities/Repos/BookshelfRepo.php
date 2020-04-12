@@ -91,10 +91,14 @@ class BookshelfRepo
     /**
      * Create a new shelf in the system.
      */
-    public function update(Bookshelf $shelf, array $input, array $bookIds): Bookshelf
+    public function update(Bookshelf $shelf, array $input, ?array $bookIds): Bookshelf
     {
         $this->baseRepo->update($shelf, $input);
-        $this->updateBooks($shelf, $bookIds);
+
+        if (!is_null($bookIds)) {
+            $this->updateBooks($shelf, $bookIds);
+        }
+
         return $shelf;
     }
 
@@ -123,7 +127,7 @@ class BookshelfRepo
      * @throws ImageUploadException
      * @throws Exception
      */
-    public function updateCoverImage(Bookshelf $shelf, UploadedFile $coverImage = null, bool $removeImage = false)
+    public function updateCoverImage(Bookshelf $shelf, ?UploadedFile $coverImage, bool $removeImage = false)
     {
         $this->baseRepo->updateCoverImage($shelf, $coverImage, $removeImage);
     }

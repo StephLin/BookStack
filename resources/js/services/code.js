@@ -5,15 +5,18 @@ import Clipboard from "clipboard/dist/clipboard.min";
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/mode/diff/diff';
+import 'codemirror/mode/fortran/fortran';
 import 'codemirror/mode/go/go';
+import 'codemirror/mode/haskell/haskell';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/julia/julia';
 import 'codemirror/mode/lua/lua';
-import 'codemirror/mode/haskell/haskell';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/mllike/mllike';
 import 'codemirror/mode/nginx/nginx';
+import 'codemirror/mode/perl/perl';
+import 'codemirror/mode/pascal/pascal';
 import 'codemirror/mode/php/php';
 import 'codemirror/mode/powershell/powershell';
 import 'codemirror/mode/properties/properties';
@@ -25,7 +28,6 @@ import 'codemirror/mode/sql/sql';
 import 'codemirror/mode/toml/toml';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/yaml/yaml';
-import 'codemirror/mode/pascal/pascal';
 
 // Addons
 import 'codemirror/addon/scroll/scrollpastend';
@@ -43,6 +45,8 @@ const modeMap = {
     'c#': 'text/x-csharp',
     csharp: 'text/x-csharp',
     diff: 'diff',
+    for: 'fortran',
+    fortran: 'fortran',
     go: 'go',
     haskell: 'haskell',
     hs: 'haskell',
@@ -59,6 +63,8 @@ const modeMap = {
     markdown: 'markdown',
     ml: 'mllike',
     nginx: 'nginx',
+    perl: 'perl',
+    pl: 'perl',
     powershell: 'powershell',
     properties: 'properties',
     ocaml: 'mllike',
@@ -111,7 +117,7 @@ function highlightWithin(parent) {
 function highlightElem(elem) {
     const innerCodeElem = elem.querySelector('code[class^=language-]');
     elem.innerHTML = elem.innerHTML.replace(/<br\s*[\/]?>/gi ,'\n');
-    const content = elem.textContent;
+    const content = elem.textContent.trimEnd();
 
     let mode = '';
     if (innerCodeElem !== null) {
@@ -185,7 +191,8 @@ function getMode(suggestion, content) {
  * @returns {*|string}
  */
 function getTheme() {
-    return window.codeTheme || 'default';
+    const darkMode = document.documentElement.classList.contains('dark-mode');
+    return window.codeTheme || (darkMode ? 'darcula' : 'default');
 }
 
 /**
