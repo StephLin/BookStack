@@ -40,7 +40,7 @@ return [
     'add' => 'Add',
     'fullscreen' => 'Fullscreen',
     'edit_link' => 'Edit Link',
-    'view_published_hackmd' => 'View Published HackMD',
+    'view_on_hackmd' => 'View on HackMD',
 
     // Sort Options
     'sort_options' => 'Sort Options',

@@ -183,7 +183,7 @@
             @if($page->hackmd)
                 <a href="{{ $page->getHackmdUrl() }}" class="icon-list-item" target="_blank">
                     <span>@icon('export')</span>
-                    <span>{{ trans('common.view_published_hackmd') }}</span>
+                    <span>{{ trans('common.view_on_hackmd') }}</span>
                 </a>
             @else
                 @include('partials.entity-export-menu', ['entity' => $page])
