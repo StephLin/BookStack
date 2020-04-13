@@ -8,6 +8,6 @@
         </button>
     </div>
 
-    {{ include('form.checkbox', ['name' => trans('auth.remember_me'), 'label' => 'remember_me']) }}
+    @include('components.custom-checkbox', ['label' => trans('auth.remember_me'), 'name' => 'remember_me', 'checked' => true, 'value' => true])
 
 </form>
