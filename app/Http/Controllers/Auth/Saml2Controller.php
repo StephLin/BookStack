@@ -4,6 +4,7 @@ namespace BookStack\Http\Controllers\Auth;
 
 use BookStack\Auth\Access\Saml2Service;
 use BookStack\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class Saml2Controller extends Controller
 {
@@ -23,8 +24,12 @@ class Saml2Controller extends Controller
     /**
      * Start the login flow via SAML2.
      */
-    public function login()
+    public function login(Request $request)
     {
+        // handle rememberMe option
+        $rememberMe = $request->input('remember_me') ? true : false;
+        session()->flash('remember_me', $rememberMe);
+
         $loginDetails = $this->samlService->login();
         session()->flash('saml2_request_id', $loginDetails['id']);
 

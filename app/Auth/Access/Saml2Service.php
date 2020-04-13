@@ -372,7 +372,7 @@ class Saml2Service extends ExternalAuthService
             $this->syncWithGroups($user, $groups);
         }
 
-        auth()->login($user);
+        auth()->login($user, session()->get('remember_me'));
         return $user;
     }
 }
