@@ -28,7 +28,7 @@ class Saml2Controller extends Controller
     {
         // handle rememberMe option
         $rememberMe = $request->input('remember_me') ? true : false;
-        session()->flash('remember_me', $rememberMe);
+        session()->put('remember_me', $rememberMe);
 
         $loginDetails = $this->samlService->login();
         session()->flash('saml2_request_id', $loginDetails['id']);
